@@ -1,34 +1,29 @@
 import { DatabaseSync } from "node:sqlite";
-import {
-  addContractSQL,
-  addUserSQL,
-  createContractTable,
-  createUserTable,
-} from "./sql/init";
-import { queryAllCustomerSQL } from "./sql/customer";
-import { queryAllContractSQL } from "./sql/contract";
+import { createContractTable, createUserTable } from "./sql/init";
+import { createUser, getAllCustomers } from "./sql/customer";
+import { createContract, getAllContracts } from "./sql/contract";
 
 export const db = new DatabaseSync("./db.sqlite");
 
 export function initializeDb() {
-  db.exec(createUserTable);
-  db.exec(createContractTable);
+  createUserTable();
+  createContractTable();
 
-  if (db.prepare(queryAllCustomerSQL).all().length === 0) {
+  if (getAllCustomers().length === 0) {
     populateDBwithUsers(25, "customer");
   }
-  if (db.prepare(queryAllContractSQL).all().length === 0) {
-    db.prepare(addContractSQL).run({
+  if (getAllContracts().length === 0) {
+    createContract({
       $name: "Contract",
       $status: "approved",
       $user_id: 1,
     });
-    db.prepare(addContractSQL).run({
+    createContract({
       $name: "test2",
       $status: "open",
       $user_id: 1,
     });
-    db.prepare(addContractSQL).run({
+    createContract({
       $name: "Test Contract",
       $status: "open",
       $user_id: 2,
@@ -37,9 +32,8 @@ export function initializeDb() {
 }
 
 function populateDBwithUsers(amount: number, type: "customer") {
-  const statement = db.prepare(addUserSQL);
   for (let i = 0; i < amount; i++) {
-    statement.run({
+    createUser({
       $username: `test${i}`,
       $email: `testemail${i}`,
       $password: "password",
