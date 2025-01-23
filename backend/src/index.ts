@@ -1,11 +1,17 @@
 import express, { Request, Response } from "express";
-const app = express();
+import { db, initializeDb } from "./database";
+import { queryAllCustomerSQL, customerByIdSQL } from "./database/sql/customer";
 
-app.get("/customers", (req: Request, res: Response) => {
-  // Todo
+const app = express();
+initializeDb();
+
+app.get("/customers", (_req: Request, res: Response) => {
+  const result = db.prepare(queryAllCustomerSQL).all();
+  res.json(result);
 });
 app.get("/customers/:id", (req: Request, res: Response) => {
-  // Todo
+  const result = db.prepare(customerByIdSQL).get({ $id: req.params.id });
+  res.json(result);
 });
 app.get("/customers/:id/contracts", (req: Request, res: Response) => {
   // Todo
