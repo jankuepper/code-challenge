@@ -15,17 +15,37 @@ export function createContract(args: {
   $user_id: number;
 }) {
   const createContractSQL = `INSERT INTO contract (name, status, user_id) VALUES ($name, $status, $user_id)`;
-  return db.prepare(createContractSQL).run(args as any);
+  try {
+    const result = db.prepare(createContractSQL).run(args as any);
+    return { success: true, errors: undefined, result };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e], result: undefined };
+  }
 }
 
 export function getAllContracts() {
   const queryAllContractSQL = `SELECT * FROM contract`;
-  return db.prepare(queryAllContractSQL).all() as Contract[] | [];
+  try {
+    const result = db.prepare(queryAllContractSQL).all() as Contract[] | [];
+    return { success: true, errors: undefined, result };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e], result: undefined };
+  }
 }
 
 export function getContractById(args: { $id: number }) {
   const queryContractById = `SELECT * FROM contract WHERE id = $id`;
-  return db.prepare(queryContractById).get(args as any) as Contract | {};
+  try {
+    const result = db.prepare(queryContractById).get(args as any) as
+      | Contract
+      | {};
+    return { success: true, errors: undefined, result };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e], result: undefined };
+  }
 }
 
 export function getAllContractsFromCustomer(args: { $id: number }) {
@@ -34,9 +54,15 @@ export function getAllContractsFromCustomer(args: { $id: number }) {
                                              LEFT JOIN user 
                                                ON contract.user_id = user.id 
                                              WHERE user.id = $id`;
-  return db.prepare(queryAllContractsFromCustomerById).all(args as any) as
-    | Contract
-    | [];
+  try {
+    const result = db
+      .prepare(queryAllContractsFromCustomerById)
+      .all(args as any) as Contract | [];
+    return { success: true, errors: undefined, result };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e], result: undefined };
+  }
 }
 
 export function getContractFromCustomer(args: {
@@ -48,9 +74,15 @@ export function getContractFromCustomer(args: {
                                              LEFT JOIN user 
                                                ON contract.user_id = user.id AND contract.id = $contractId
                                              WHERE user.id = $userId`;
-  return db.prepare(queryContractByIdFromCustomerById).get(args as any) as
-    | Contract
-    | {};
+  try {
+    const result = db
+      .prepare(queryContractByIdFromCustomerById)
+      .get(args as any) as Contract | {};
+    return { success: true, errors: undefined, result };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e], result: undefined };
+  }
 }
 
 export function updateContractFromCustomer(args: {
@@ -61,11 +93,17 @@ export function updateContractFromCustomer(args: {
   const updateContractFromCustomerSQL = `UPDATE contract
                                          SET name = $contractName, status = $contractStatus, user_id = $userId
                                          WHERE id = $contractId AND user_id = $validateUserId`;
-  return db.prepare(updateContractFromCustomerSQL).get({
-    $contractId: args.$contractId,
-    $validateUserId: args.$userId,
-    $contractName: args.body.name,
-    $contractStatus: args.body.status,
-    $userId: args.body?.user_id ?? null,
-  } as any) as Contract | {};
+  try {
+    const result = db.prepare(updateContractFromCustomerSQL).get({
+      $contractId: args.$contractId,
+      $validateUserId: args.$userId,
+      $contractName: args.body.name,
+      $contractStatus: args.body.status,
+      $userId: args.body?.user_id ?? null,
+    } as any) as Contract | {};
+    return { success: true, errors: undefined, result };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e], result: undefined };
+  }
 }

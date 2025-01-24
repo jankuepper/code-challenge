@@ -9,10 +9,10 @@ export function initializeDb() {
   createUserTable();
   createContractTable();
 
-  if (getAllCustomers().length === 0) {
+  if (getAllCustomers().result?.length === 0) {
     populateDBwithUsers(25, "customer");
   }
-  if (getAllContracts().length === 0) {
+  if (getAllContracts().result?.length === 0) {
     createContract({
       $name: "Contract",
       $status: "approved",
