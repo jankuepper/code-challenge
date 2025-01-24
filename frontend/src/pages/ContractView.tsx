@@ -48,6 +48,11 @@ export function ContractView() {
   };
   useEffect(() => refresh(), []);
   useEffect(() => populateTableRows(), [contracts]);
+  useEffect(() => {
+    if (!openDialog) {
+      refresh();
+    }
+  }, [openDialog]);
 
   const populateTableRows = () => {
     const tableRowsTemp = [];
