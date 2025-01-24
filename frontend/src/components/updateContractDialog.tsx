@@ -23,7 +23,10 @@ export function UpdateContractDialog(props: {
             Make changes to your contract here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <UpdateContractForm contract={props.contract} />
+        <UpdateContractForm
+          contract={props.contract}
+          onOpenChange={props.onOpenChange}
+        />
       </DialogContent>
     </Dialog>
   );

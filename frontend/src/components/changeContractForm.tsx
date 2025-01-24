@@ -19,27 +19,30 @@ const formSchema = z.object({
     invalid_type_error: "Name must be a string",
   }),
   status: z.enum(["approved", "open", "closed"]),
-  userId: z.coerce
+  user_id: z.coerce
     .number({
-      invalid_type_error: "userId must be a number.",
+      invalid_type_error: "user_id must be a number.",
     })
     .int()
     .optional(),
 });
 
-export function UpdateContractForm(props: { contract: Contract }) {
+export function UpdateContractForm(props: {
+  contract: Contract;
+  onOpenChange: (open: boolean) => void;
+}) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: props.contract.name!,
       status: props.contract.status!,
-      userId: props.contract.user_id! ?? -1,
+      user_id: props.contract.user_id! ?? -1,
     },
   });
   async function onSubmit({
     name,
     status,
-    userId,
+    user_id,
   }: z.infer<typeof formSchema>) {
     try {
       // TODO: insert id of authenticated user once its done
@@ -50,12 +53,15 @@ export function UpdateContractForm(props: { contract: Contract }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ name, status, userId: userId || null }),
+          body: JSON.stringify({ name, status, user_id }),
         }
       )
         .then((res) => res.json())
         // TODO: show toast
-        .then((data) => console.log(data));
+        .then((data) => {
+          console.log(data);
+        })
+        .finally(() => props.onOpenChange(false));
     } catch (e) {
       console.error(e);
     }
@@ -93,12 +99,12 @@ export function UpdateContractForm(props: { contract: Contract }) {
           />
           <FormField
             control={form.control}
-            name="userId"
+            name="user_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>UserId</FormLabel>
                 <FormControl>
-                  <Input placeholder="userId" type="number" {...field} />
+                  <Input placeholder="user_id" type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
