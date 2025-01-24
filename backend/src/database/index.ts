@@ -1,5 +1,10 @@
 import { DatabaseSync } from "node:sqlite";
-import { createContractTable, createUserTable } from "./sql/init";
+import {
+  createContractAuditTable,
+  createContractTable,
+  createContractUpdateTrigger,
+  createUserTable,
+} from "./sql/init";
 import { createUser, getAllCustomers } from "./sql/customer";
 import { createContract, getAllContracts } from "./sql/contract";
 
@@ -10,6 +15,8 @@ export const db = new DatabaseSync("./db.sqlite");
 export function initializeDb() {
   createUserTable();
   createContractTable();
+  createContractAuditTable();
+  createContractUpdateTrigger();
 
   if (getAllCustomers().result?.length === 0) {
     populateDBwithUsers(25, "customer");
