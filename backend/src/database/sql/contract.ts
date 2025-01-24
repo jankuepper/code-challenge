@@ -12,7 +12,7 @@ export type Contract = {
 export function createContract(args: {
   $name: string;
   $status: string;
-  $user_id: number;
+  $user_id: number | null;
 }) {
   const createContractSQL = `INSERT INTO contract (name, status, user_id) VALUES ($name, $status, $user_id)`;
   try {

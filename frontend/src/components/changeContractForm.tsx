@@ -44,7 +44,7 @@ export function UpdateContractForm(props: { contract: Contract }) {
     try {
       // TODO: insert id of authenticated user once its done
       fetch(
-        `http://localhost:3000/customers/${1}/contracts/${props.contract.id}`,
+        `http://localhost:3000/customers/${2}/contracts/${props.contract.id}`,
         {
           method: "PUT",
           headers: {

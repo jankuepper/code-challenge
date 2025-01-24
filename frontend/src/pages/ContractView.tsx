@@ -35,13 +35,16 @@ export function ContractView() {
   >(undefined);
 
   const refresh = () => {
-    fetch("http://localhost:3000/contracts")
+    // TODO: insert id of authenticated user once its done
+    fetch(`http://localhost:3000/contracts/${1}`)
       .then((result) => result.json())
       .then((data) => {
-        setContracts(data);
-        setLoading(false);
+        if (data.success) {
+          setContracts(data.result);
+        }
         console.log(data);
-      });
+      })
+      .finally(() => setLoading(false));
   };
   useEffect(() => refresh(), []);
   useEffect(() => populateTableRows(), [contracts]);

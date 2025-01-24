@@ -29,7 +29,7 @@ app.get("/customers", (_req: Request, res: Response) => {
   res.json(result);
 });
 
-app.get("/customers/:id", ({ params: id }, res: Response) => {
+app.get("/customers/:id", ({ params: { id } }, res: Response) => {
   let result = {};
   if (isANumber(id)) {
     result = getCustomerById({ $id: Number(id) });
