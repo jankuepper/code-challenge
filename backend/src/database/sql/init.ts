@@ -58,7 +58,7 @@ export function createContractAuditTable() {
     return { success: false, errors: [e] };
   }
 }
-
+// won't add after delete trigger since no delete functionality
 export function createContractUpdateTrigger() {
   const trigger = `
         CREATE TRIGGER IF NOT EXISTS contract_audit_after_update
