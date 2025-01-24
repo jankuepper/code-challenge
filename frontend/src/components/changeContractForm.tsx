@@ -61,6 +61,7 @@ export function UpdateContractForm(props: {
       .then((data) => {
         if (data.success) {
           toast({
+            variant: "success",
             title: "Success!",
             description: "Your contract has been updated.",
           });
