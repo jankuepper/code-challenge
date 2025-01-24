@@ -10,7 +10,13 @@ export function createUserTable() {
         password TEXT NOT NULL,
         type TEXT NOT NULL
     )`;
-  return db.exec(createUserTable);
+  try {
+    const result = db.exec(createUserTable);
+    return { success: true, errors: undefined, result };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e], result: undefined };
+  }
 }
 export function createContractTable() {
   const createContractTable = `
@@ -21,5 +27,11 @@ export function createContractTable() {
         user_id INTEGER, 
         FOREIGN KEY (user_id) REFERENCES user(id)
     )`;
-  return db.exec(createContractTable);
+  try {
+    db.exec(createContractTable);
+    return { success: true, errors: [] };
+  } catch (e) {
+    console.error(e);
+    return { success: false, errors: [e] };
+  }
 }
