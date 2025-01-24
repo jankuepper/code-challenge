@@ -1,15 +1,20 @@
 import express, { Request, Response } from "express";
-import { db, initializeDb } from "./database";
+import { initializeDb } from "./database";
+import { getAllCustomers, getCustomerById } from "./database/sql/customer";
 import {
-  getAllCustomers,
-  getCustomerById,
+  getAllContracts,
   getAllContractsFromCustomer,
+  getContractById,
   getContractFromCustomer,
-} from "./database/sql/customer";
-import { getAllContracts, getContractById } from "./database/sql/contract";
+  updateContractFromCustomer,
+} from "./database/sql/contract";
 import { isANumber } from "./utils/isNumber";
+import { isValidContractBody } from "./utils/validation";
+import { json } from "body-parser";
 
 const app = express();
+app.use(json());
+
 initializeDb();
 
 app.get("/customers", (_req: Request, res: Response) => {
@@ -41,6 +46,21 @@ app.get(
       result = getContractFromCustomer({
         $userId: Number(id),
         $contractId: Number(contract_id),
+      });
+    }
+    res.json(result);
+  }
+);
+
+app.put(
+  "/customers/:id/contracts/:contract_id",
+  ({ params: { id, contract_id }, body }, res) => {
+    let result = {};
+    if (isANumber(id) && isANumber(contract_id) && isValidContractBody(body)) {
+      result = updateContractFromCustomer({
+        $userId: Number(id),
+        $contractId: Number(id),
+        body,
       });
     }
     res.json(result);

@@ -27,3 +27,44 @@ export function getContractById(args: { $id: Number }) {
   const queryContractById = `SELECT * FROM contract WHERE id = $id`;
   return db.prepare(queryContractById).get(args as any) as Contract | {};
 }
+
+export function getAllContractsFromCustomer(args: { $id: Number }) {
+  const queryAllContractsFromCustomerById = `SELECT contract.id, contract.name, contract.status, contract.user_id
+                                             FROM contract 
+                                             LEFT JOIN user 
+                                               ON contract.user_id = user.id 
+                                             WHERE user.id = $id`;
+  return db.prepare(queryAllContractsFromCustomerById).all(args as any) as
+    | Contract
+    | [];
+}
+
+export function getContractFromCustomer(args: {
+  $userId: Number;
+  $contractId: Number;
+}) {
+  const queryContractByIdFromCustomerById = `SELECT contract.id, contract.name, contract.status, contract.user_id 
+                                             FROM contract
+                                             LEFT JOIN user 
+                                               ON contract.user_id = user.id AND contract.id = $contractId
+                                             WHERE user.id = $userId`;
+  return db.prepare(queryContractByIdFromCustomerById).get(args as any) as
+    | Contract
+    | {};
+}
+
+export function updateContractFromCustomer(args: {
+  $userId: Number;
+  $contractId: Number;
+  body: Contract;
+}) {
+  const updateContractFromCustomerSQL = `UPDATE contract
+                                         SET name = $contractName, status = $contractStatus, user_id = $userId
+                                         WHERE  contract.id = $contractId`;
+  return db.prepare(updateContractFromCustomerSQL).get({
+    $contractId: args.$contractId,
+    $contractName: args.body.name,
+    $contractStatus: args.body.status,
+    $userId: args.body?.user_id ?? null,
+  } as any) as Contract | {};
+}
