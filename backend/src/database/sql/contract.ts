@@ -4,7 +4,7 @@ import { User } from "./customer";
 type ContractStatus = "approved" | "open" | "closed";
 export type Contract = {
   id: number;
-  name: number;
+  name: string;
   status: ContractStatus;
   user_id?: User["id"];
 };

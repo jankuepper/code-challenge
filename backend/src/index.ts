@@ -14,13 +14,13 @@ import { json } from "body-parser";
 import cors from "cors";
 
 var corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "http://localhost:5173/",
   optionsSuccessStatus: 200,
 };
 
 const app = express();
 app.use(json());
-app.use(cors(corsOptions));
+app.use(cors());
 
 initializeDb();
 
