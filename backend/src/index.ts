@@ -59,7 +59,7 @@ app.put(
     if (isANumber(id) && isANumber(contract_id) && isValidContractBody(body)) {
       result = updateContractFromCustomer({
         $userId: Number(id),
-        $contractId: Number(id),
+        $contractId: Number(contract_id),
         body,
       });
     }
