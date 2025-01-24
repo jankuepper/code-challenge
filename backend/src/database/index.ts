@@ -5,6 +5,8 @@ import { createContract, getAllContracts } from "./sql/contract";
 
 export const db = new DatabaseSync("./db.sqlite");
 
+// TODO: Maybe implement RETURNING for some statements
+
 export function initializeDb() {
   createUserTable();
   createContractTable();

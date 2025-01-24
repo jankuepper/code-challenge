@@ -48,7 +48,7 @@ export function UpdateContractForm(props: {
   }: z.infer<typeof formSchema>) {
     // TODO: insert id of authenticated user once its done
     fetch(
-      `http://localhost:3000/customers/${2}/contracts/${props.contract.id}`,
+      `http://localhost:3000/customers/${3}/contracts/${props.contract.id}`,
       {
         method: "PUT",
         headers: {
