@@ -36,7 +36,7 @@ export function ContractView() {
 
   const refresh = () => {
     // TODO: insert id of authenticated user once its done
-    fetch(`http://localhost:3000/customers/${2}/contracts`)
+    fetch(`http://localhost:3000/customers/${3}/contracts`)
       .then((result) => result.json())
       .then((data) => {
         if (data.success) {

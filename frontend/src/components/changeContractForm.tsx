@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Contract } from "@/pages/ContractView";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string({
@@ -31,6 +32,7 @@ export function UpdateContractForm(props: {
   contract: Contract;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,27 +46,35 @@ export function UpdateContractForm(props: {
     status,
     user_id,
   }: z.infer<typeof formSchema>) {
-    try {
-      // TODO: insert id of authenticated user once its done
-      fetch(
-        `http://localhost:3000/customers/${2}/contracts/${props.contract.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, status, user_id }),
+    // TODO: insert id of authenticated user once its done
+    fetch(
+      `http://localhost:3000/customers/${2}/contracts/${props.contract.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, status, user_id }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          toast({
+            title: "Success!",
+            description: "Your contract has been updated.",
+          });
         }
-      )
-        .then((res) => res.json())
-        // TODO: show toast
-        .then((data) => {
-          console.log(data);
-        })
-        .finally(() => props.onOpenChange(false));
-    } catch (e) {
-      console.error(e);
-    }
+      })
+      .catch((e) => {
+        console.error(e);
+        toast({
+          variant: "destructive",
+          title: "Error!",
+          description: "Your update failed.",
+        });
+      })
+      .finally(() => props.onOpenChange(false));
   }
 
   return (
