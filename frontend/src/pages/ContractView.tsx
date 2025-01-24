@@ -7,11 +7,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+type ContractStatus = "approved" | "open" | "closed";
+export type Contract = {
+  id: number;
+  name: number;
+  status: ContractStatus;
+  user_id?: User["id"];
+};
+export type User = {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  type: "customer";
+};
 
 export function ContractView() {
   const [loading, setLoading] = useState(true);
-  const [contracts, setContracts] = useState<any>([]);
+  const [contracts, setContracts] = useState<Contract[] | []>([]);
   const [tableRows, setTableRows] = useState<any>([]);
 
   const refresh = () => {
@@ -30,7 +45,7 @@ export function ContractView() {
     for (let i = 0; i < contracts.length; i++) {
       tableRowsTemp.push(
         <TableRow>
-          <TableCell className="font-medium">{contracts[i].id}</TableCell>
+          <TableCell className="font-medium">{contracts[i]?.id}</TableCell>
           <TableCell>{contracts[i]?.name}</TableCell>
           <TableCell>{contracts[i]?.status}</TableCell>
           <TableCell>{contracts[i]?.user_id}</TableCell>

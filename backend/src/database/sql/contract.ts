@@ -3,16 +3,16 @@ import { User } from "./customer";
 
 type ContractStatus = "approved" | "open" | "closed";
 export type Contract = {
-  id: Number;
-  name: Number;
+  id: number;
+  name: number;
   status: ContractStatus;
   user_id?: User["id"];
 };
 
 export function createContract(args: {
-  $name: String;
-  $status: String;
-  $user_id: Number;
+  $name: string;
+  $status: string;
+  $user_id: number;
 }) {
   const createContractSQL = `INSERT INTO contract (name, status, user_id) VALUES ($name, $status, $user_id)`;
   return db.prepare(createContractSQL).run(args as any);
@@ -23,12 +23,12 @@ export function getAllContracts() {
   return db.prepare(queryAllContractSQL).all() as Contract[] | [];
 }
 
-export function getContractById(args: { $id: Number }) {
+export function getContractById(args: { $id: number }) {
   const queryContractById = `SELECT * FROM contract WHERE id = $id`;
   return db.prepare(queryContractById).get(args as any) as Contract | {};
 }
 
-export function getAllContractsFromCustomer(args: { $id: Number }) {
+export function getAllContractsFromCustomer(args: { $id: number }) {
   const queryAllContractsFromCustomerById = `SELECT contract.id, contract.name, contract.status, contract.user_id
                                              FROM contract 
                                              LEFT JOIN user 
@@ -40,8 +40,8 @@ export function getAllContractsFromCustomer(args: { $id: Number }) {
 }
 
 export function getContractFromCustomer(args: {
-  $userId: Number;
-  $contractId: Number;
+  $userId: number;
+  $contractId: number;
 }) {
   const queryContractByIdFromCustomerById = `SELECT contract.id, contract.name, contract.status, contract.user_id 
                                              FROM contract
@@ -54,8 +54,8 @@ export function getContractFromCustomer(args: {
 }
 
 export function updateContractFromCustomer(args: {
-  $userId: Number;
-  $contractId: Number;
+  $userId: number;
+  $contractId: number;
   body: Contract;
 }) {
   const updateContractFromCustomerSQL = `UPDATE contract

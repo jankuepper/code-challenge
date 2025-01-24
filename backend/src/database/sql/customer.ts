@@ -2,17 +2,17 @@ import { db } from "..";
 import { Contract } from "./contract";
 
 export type User = {
-  id: Number;
-  username: String;
-  email: String;
-  password: String;
+  id: number;
+  username: string;
+  email: string;
+  password: string;
   type: "customer";
 };
 
 export function createUser(args: {
-  $username: String;
-  $email: String;
-  $password: String;
+  $username: string;
+  $email: string;
+  $password: string;
   $type: "customer";
 }) {
   const createUserSQL = `INSERT INTO user (username, email, password, type) VALUES ($username, $email, $password, $type)`;
@@ -24,7 +24,7 @@ export function getAllCustomers() {
   return db.prepare(queryAllCustomerSQL).all() as User[] | [];
 }
 
-export function getCustomerById(args: { $id: Number }) {
+export function getCustomerById(args: { $id: number }) {
   const customerByIdSQL = `SELECT * FROM user WHERE id = $id AND type = 'customer'`;
   return db.prepare(customerByIdSQL).get(args as any) as User | {};
 }
