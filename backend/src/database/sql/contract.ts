@@ -60,9 +60,10 @@ export function updateContractFromCustomer(args: {
 }) {
   const updateContractFromCustomerSQL = `UPDATE contract
                                          SET name = $contractName, status = $contractStatus, user_id = $userId
-                                         WHERE  contract.id = $contractId`;
+                                         WHERE id = $contractId AND user_id = $validateUserId`;
   return db.prepare(updateContractFromCustomerSQL).get({
     $contractId: args.$contractId,
+    $validateUserId: args.$userId,
     $contractName: args.body.name,
     $contractStatus: args.body.status,
     $userId: args.body?.user_id ?? null,
