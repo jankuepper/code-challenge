@@ -15,16 +15,12 @@ export function handleLogin(
     !isAString(username) ||
     !isAString(password)
   ) {
-    res
-      .status(422)
-      .json(res.json({ success: false, errors: [Error("Invalid body.")] }));
+    res.status(422).json({ success: false, errors: ["Invalid body."] });
     return;
   }
   const user = internalGetCustomerByUsername({ $username: username });
   if (!user.success || !user.result || !("username" in user.result)) {
-    res
-      .status(404)
-      .json({ success: false, errors: [Error("User not found.")] });
+    res.status(404).json({ success: false, errors: ["User not found."] });
     return;
   }
   const isValidPassword = validatePassword(
@@ -33,7 +29,7 @@ export function handleLogin(
     user.result.salt
   );
   if (!isValidPassword) {
-    res.json({ success: false, errors: [Error("Invalid password.")] });
+    res.json({ success: false, errors: ["Invalid password."] });
     return;
   }
   const token = generateToken(username);
