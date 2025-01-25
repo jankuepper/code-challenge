@@ -86,8 +86,8 @@ export function createContractUpdateTrigger() {
             old.status,
             new.user_id,
             old.user_id,
-            "update",
-            DATETIME("NOW")
+            'update',
+            DATETIME('NOW')
           );
         END`;
   try {
