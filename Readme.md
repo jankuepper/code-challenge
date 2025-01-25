@@ -2,6 +2,7 @@
 
 ## getting it started
 prerequisit: you need to install nvm if you haven't already https://github.com/nvm-sh/nvm
+typescript needs to be installed (npm -g install typescript
 
 ### backend
 
