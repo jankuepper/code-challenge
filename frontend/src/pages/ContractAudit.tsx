@@ -16,12 +16,14 @@ export function ContractAudit() {
   const { authData } = useAuth();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
-  const [contractAudit, setContractAudit] = useState(undefined);
+  const [contractAudit, setContractAudit] = useState<
+    { name: string; old: any; new: any }[] | undefined
+  >(undefined);
   const [rows, setRows] = useState<any>([]);
   const refresh = () => {
     if (!location.state.contractAuditId || !authData) return;
     fetch(
-      `http://localhost:3000/contract_audits/${location.state.contractAuditId}`,
+      `http://localhost:3000/contract_audits/${location.state.contractAuditId}/diff`,
       {
         headers: {
           Authorization: `Bearer ${authData.token}`,
@@ -57,48 +59,22 @@ export function ContractAudit() {
   useEffect(() => populateTable(), [contractAudit]);
 
   const populateTable = () => {
-    try {
-      if (!contractAudit) return;
-      const newValues = Object.keys(contractAudit)
-        .filter((key) => key.includes("new_"))
-        .sort();
-      const oldValues = Object.keys(contractAudit)
-        .filter((key) => key.includes("old_"))
-        .sort();
-      if (newValues.length !== oldValues.length)
-        throw Error("Something went wrong");
-      const tmpRows = [];
-      for (let i = 0; i < newValues.length; i++) {
-        if (contractAudit[newValues[i]] === contractAudit[oldValues[i]])
-          continue;
-        tmpRows.push(
-          <TableRow key={i}>
-            <TableCell>{newValues[i].replace("new_", "")}</TableCell>
-            <TableCell className="bg-red-200">
-              {contractAudit[oldValues[i]]}
-            </TableCell>
-            <TableCell className="bg-green-200">
-              {contractAudit[newValues[i]]}
-            </TableCell>
-          </TableRow>
-        );
-        setRows(tmpRows);
-      }
-    } catch (e) {
-      console.error(e);
-      toast({
-        variant: "destructive",
-        title: "Error!",
-        description: "Something went wrong.",
-      });
-    }
+    if (!contractAudit) return;
+    const tmpRows = contractAudit.map((audit) => (
+      <TableRow key={audit.name}>
+        <TableCell>{audit.name}</TableCell>
+        <TableCell className="bg-red-200">{audit.old}</TableCell>
+        <TableCell className="bg-green-200">{audit.new}</TableCell>
+      </TableRow>
+    ));
+
+    setRows(tmpRows);
   };
 
   return (
     <>
       <div className="h-dvh" hidden={loading}>
         <Table>
-          {/* <TableCaption>A list of your contracts.</TableCaption> */}
           <TableHeader>
             <TableRow>
               <TableHead>Property</TableHead>
