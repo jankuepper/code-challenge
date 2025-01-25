@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Contract } from "@/pages/ContractView";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   name: z.string({
@@ -33,6 +34,7 @@ export function UpdateContractForm(props: {
   onOpenChange: (open: boolean) => void;
 }) {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,6 +66,11 @@ export function UpdateContractForm(props: {
             variant: "success",
             title: "Success!",
             description: "Your contract has been updated.",
+          });
+          navigate("/contract-audit", {
+            state: {
+              contractAuditId: props.contract?.id,
+            },
           });
         }
       })

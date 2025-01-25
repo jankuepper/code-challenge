@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { UpdateContractDialog } from "@/components/updateContractDialog";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 type ContractStatus = "approved" | "open" | "closed";
 export type Contract = {
@@ -26,15 +28,17 @@ export type User = {
 };
 
 export function ContractView() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [contracts, setContracts] = useState<Contract[] | []>([]);
   const [tableRows, setTableRows] = useState<any>([]);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [selectedContract, setSelectedContract] = useState<
     Contract | undefined
   >(undefined);
 
   const refresh = () => {
+    setLoading(true);
     // TODO: insert id of authenticated user once its done
     fetch(`http://localhost:3000/customers/${3}/contracts`)
       .then((result) => result.json())
@@ -42,33 +46,68 @@ export function ContractView() {
         if (data.success) {
           setContracts(data.result);
         }
-        console.log(data);
       })
       .finally(() => setLoading(false));
   };
   useEffect(() => refresh(), []);
   useEffect(() => populateTableRows(), [contracts]);
   useEffect(() => {
-    if (!openDialog) {
+    if (!openUpdateDialog) {
       refresh();
     }
-  }, [openDialog]);
+  }, [openUpdateDialog]);
 
   const populateTableRows = () => {
     const tableRowsTemp = [];
     for (let i = 0; i < contracts.length; i++) {
       tableRowsTemp.push(
-        <TableRow
-          onClick={() => {
-            setSelectedContract(contracts[i]);
-            setOpenDialog(true);
-          }}
-          key={contracts[i]?.id}
-        >
-          <TableCell className="font-medium">{contracts[i]?.id}</TableCell>
-          <TableCell>{contracts[i]?.name}</TableCell>
-          <TableCell>{contracts[i]?.status}</TableCell>
-          <TableCell>{contracts[i]?.user_id}</TableCell>
+        <TableRow key={contracts[i]?.id}>
+          <TableCell
+            className="font-medium"
+            onClick={() => {
+              setSelectedContract(contracts[i]);
+              setOpenUpdateDialog(true);
+            }}
+          >
+            {contracts[i]?.id}
+          </TableCell>
+          <TableCell
+            onClick={() => {
+              setSelectedContract(contracts[i]);
+              setOpenUpdateDialog(true);
+            }}
+          >
+            {contracts[i]?.name}
+          </TableCell>
+          <TableCell
+            onClick={() => {
+              setSelectedContract(contracts[i]);
+              setOpenUpdateDialog(true);
+            }}
+          >
+            {contracts[i]?.status}
+          </TableCell>
+          <TableCell
+            onClick={() => {
+              setSelectedContract(contracts[i]);
+              setOpenUpdateDialog(true);
+            }}
+          >
+            {contracts[i]?.user_id}
+          </TableCell>
+          <TableCell>
+            <Button
+              onClick={() =>
+                navigate("/contract-audit", {
+                  state: {
+                    contractAuditId: contracts[i].id,
+                  },
+                })
+              }
+            >
+              Latest
+            </Button>
+          </TableCell>
         </TableRow>
       );
     }
@@ -86,13 +125,14 @@ export function ContractView() {
               <TableHead>Name</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>UserId</TableHead>
+              <TableHead className="w-[100px]">Audit</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>{tableRows}</TableBody>
         </Table>
         <UpdateContractDialog
-          open={openDialog}
-          onOpenChange={setOpenDialog}
+          open={openUpdateDialog}
+          onOpenChange={setOpenUpdateDialog}
           contract={selectedContract!}
         />
       </div>
