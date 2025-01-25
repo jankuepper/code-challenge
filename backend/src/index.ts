@@ -16,11 +16,8 @@ import {
   getAllContractAudits,
   getContractAuditsById,
 } from "./database/sql/contract_audit";
-
-var corsOptions = {
-  origin: "http://localhost:5173/",
-  optionsSuccessStatus: 200,
-};
+import { handleLogin } from "./service/login";
+import { authMiddleware } from "./middleware/auth";
 
 const app = express();
 app.use(json());
@@ -41,16 +38,21 @@ app.get("/customers/:id", ({ params: { id } }, res: Response) => {
   res.json(result);
 });
 
-app.get("/customers/:id/contracts", ({ params: { id } }, res: Response) => {
-  let result = {};
-  if (isANumber(id)) {
-    result = getAllContractsFromCustomer({ $id: Number(id) });
+app.get(
+  "/customers/:id/contracts",
+  authMiddleware,
+  ({ params: { id } }, res: Response) => {
+    let result = {};
+    if (isANumber(id)) {
+      result = getAllContractsFromCustomer({ $id: Number(id) });
+    }
+    res.json(result);
   }
-  res.json(result);
-});
+);
 
 app.get(
   "/customers/:id/contracts/:contract_id",
+  authMiddleware,
   ({ params: { id, contract_id } }, res: Response) => {
     let result = {};
     if (isANumber(id) && isANumber(contract_id)) {
@@ -65,6 +67,7 @@ app.get(
 
 app.put(
   "/customers/:id/contracts/:contract_id",
+  authMiddleware,
   ({ params: { id, contract_id }, body }, res) => {
     let result = {};
     if (isANumber(id) && isANumber(contract_id) && isValidContractBody(body)) {
@@ -102,6 +105,10 @@ app.get("/contract_audits/:id", ({ params: { id } }, res: Response) => {
     result = getContractAuditsById({ $id: Number(id) });
   }
   res.json(result);
+});
+
+app.post("/login", ({ body }, res: Response) => {
+  res.json(handleLogin(body, res));
 });
 
 app.listen(3000, () => console.log("Started listening on port 3000"));

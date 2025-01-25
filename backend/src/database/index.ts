@@ -7,11 +7,11 @@ import {
 } from "./sql/init";
 import { createUser, getAllCustomers } from "./sql/customer";
 import { createContract, getAllContracts } from "./sql/contract";
+import { hashPassword } from "../utils/password";
 
 export const db = new DatabaseSync("./db.sqlite");
 
 // TODO: Maybe implement RETURNING for some statements
-
 export function initializeDb() {
   createUserTable();
   createContractTable();
@@ -31,18 +31,22 @@ export function initializeDb() {
 }
 
 function populateDBwithUsers(amount: number, type: "customer") {
-  for (let i = 0; i < amount; i++) {
+  // intentional so it corresponds with the id
+  for (let i = 1; i < amount; i++) {
+    const { hashedPassword, salt } = hashPassword("password");
     createUser({
       $username: `test${i}`,
-      $email: `testemail${i}`,
-      $password: "password",
+      $email: `testemail${i}@test.com`,
+      $password: hashedPassword,
       $type: type,
+      $salt: salt,
     });
   }
 }
 
 function populateDBwithContracts(amountPerUser: number, userId: number) {
-  for (let i = 0; i < amountPerUser; i++) {
+  // intentional so it corresponds with the id
+  for (let i = 1; i < amountPerUser; i++) {
     createContract({
       $name: `Test Contract ${i}`,
       $status: "open",

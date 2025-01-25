@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { UpdateContractForm } from "@/components/changeContractForm";
+import { UpdateContractForm } from "@/components/forms/changeContractForm";
 import { Contract } from "@/pages/ContractView";
 
 export function UpdateContractDialog(props: {
