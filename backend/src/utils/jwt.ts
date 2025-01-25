@@ -1,4 +1,4 @@
-import { JwtPayload, sign, verify } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 import { isAString } from "./isString";
 
 // this is essentially treated as an all access token
