@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 
 const formSchema = z
   .object({
@@ -42,7 +42,7 @@ const formSchema = z
   });
 
 export function SignUp() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,7 +52,7 @@ export function SignUp() {
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO
+    // TODO but no time
     console.log(values);
   }
   return (
@@ -61,6 +61,7 @@ export function SignUp() {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
+            disabled
             name="username"
             render={({ field }) => (
               <FormItem>
@@ -74,6 +75,7 @@ export function SignUp() {
           />
           <FormField
             control={form.control}
+            disabled
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -87,6 +89,7 @@ export function SignUp() {
           />
           <FormField
             control={form.control}
+            disabled
             name="confirm"
             render={({ field }) => (
               <FormItem>
@@ -98,7 +101,7 @@ export function SignUp() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="mt-4">
+          <Button type="submit" className="mt-4" disabled>
             Submit
           </Button>
         </form>
