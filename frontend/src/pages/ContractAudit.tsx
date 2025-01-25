@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/authProvider";
 import {
   Table,
   TableBody,
@@ -12,21 +13,35 @@ import { useLocation } from "react-router";
 
 export function ContractAudit() {
   const { toast } = useToast();
+  const { authData } = useAuth();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [contractAudit, setContractAudit] = useState(undefined);
   const [rows, setRows] = useState<any>([]);
   const refresh = () => {
-    if (!location.state.contractAuditId) return;
+    if (!location.state.contractAuditId || !authData) return;
     fetch(
-      `http://localhost:3000/contract_audits/${location.state.contractAuditId}`
+      `http://localhost:3000/contract_audits/${location.state.contractAuditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authData.token}`,
+        },
+      }
     )
       .then((res) => res.json())
       .then((data) => {
-        if (!data.success) {
-          throw Error(data.error);
+        const { success, result, errors } = data;
+        if (errors) {
+          throw Error(errors);
         }
-        setContractAudit(data.result);
+        if (!success && !result) {
+          toast({
+            title: "Empty!",
+            description: `No audit entry exists for this contract ${location.state.contractAuditId}`,
+          });
+          return;
+        }
+        setContractAudit(result);
       })
       .catch((e) => {
         console.error(e);

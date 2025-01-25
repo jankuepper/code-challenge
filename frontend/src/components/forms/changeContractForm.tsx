@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Contract } from "@/pages/ContractView";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
+import { useAuth } from "../authProvider";
 
 const formSchema = z.object({
   name: z.string({
@@ -35,6 +36,7 @@ export function UpdateContractForm(props: {
 }) {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { authData } = useAuth();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,41 +50,43 @@ export function UpdateContractForm(props: {
     status,
     user_id,
   }: z.infer<typeof formSchema>) {
-    // TODO: insert id of authenticated user once its done
-    fetch(
-      `http://localhost:3000/customers/${3}/contracts/${props.contract.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, status, user_id }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          toast({
-            variant: "success",
-            title: "Success!",
-            description: "Your contract has been updated.",
-          });
-          navigate("/contract-audit", {
-            state: {
-              contractAuditId: props.contract?.id,
-            },
-          });
+    if (authData) {
+      fetch(
+        `http://localhost:3000/customers/${authData.user.id}/contracts/${props.contract.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authData.token}`,
+          },
+          body: JSON.stringify({ name, status, user_id }),
         }
-      })
-      .catch((e) => {
-        console.error(e);
-        toast({
-          variant: "destructive",
-          title: "Error!",
-          description: "Your update failed.",
-        });
-      })
-      .finally(() => props.onOpenChange(false));
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            toast({
+              variant: "success",
+              title: "Success!",
+              description: "Your contract has been updated.",
+            });
+            navigate("/contract-audit", {
+              state: {
+                contractAuditId: props.contract?.id,
+              },
+            });
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          toast({
+            variant: "destructive",
+            title: "Error!",
+            description: "Your update failed.",
+          });
+        })
+        .finally(() => props.onOpenChange(false));
+    }
   }
 
   return (
