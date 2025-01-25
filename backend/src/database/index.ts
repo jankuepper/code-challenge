@@ -7,11 +7,11 @@ import {
 } from "./sql/init";
 import { createUser, getAllCustomers } from "./sql/customer";
 import { createContract, getAllContracts } from "./sql/contract";
+import { hashPassword } from "../utils/password";
 
 export const db = new DatabaseSync("./db.sqlite");
 
 // TODO: Maybe implement RETURNING for some statements
-
 export function initializeDb() {
   createUserTable();
   createContractTable();
@@ -35,7 +35,7 @@ function populateDBwithUsers(amount: number, type: "customer") {
     createUser({
       $username: `test${i}`,
       $email: `testemail${i}`,
-      $password: "password",
+      $password: hashPassword("password").hashedPassword,
       $type: type,
     });
   }

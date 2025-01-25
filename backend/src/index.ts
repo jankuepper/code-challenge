@@ -16,6 +16,7 @@ import {
   getAllContractAudits,
   getContractAuditsById,
 } from "./database/sql/contract_audit";
+import { handleLogin } from "./service/login";
 
 var corsOptions = {
   origin: "http://localhost:5173/",
@@ -102,6 +103,10 @@ app.get("/contract_audits/:id", ({ params: { id } }, res: Response) => {
     result = getContractAuditsById({ $id: Number(id) });
   }
   res.json(result);
+});
+
+app.post("/login", ({ body }, res: Response) => {
+  res.json(handleLogin(body, res));
 });
 
 app.listen(3000, () => console.log("Started listening on port 3000"));
