@@ -33,5 +33,10 @@ export function handleLogin(
     return;
   }
   const token = generateToken(username);
-  res.json({ success: !!token, result: token });
+  // dont leak sensitive information
+  const { id, email, type } = user.result;
+  res.json({
+    success: !!token,
+    result: { token, user: { id, username, email, type } },
+  });
 }

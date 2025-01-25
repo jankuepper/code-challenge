@@ -3,10 +3,10 @@ import { useAuth } from "./authProvider";
 import { useEffect } from "react";
 
 export function ProtectedRoute() {
-  const { token } = useAuth();
+  const { authData } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    if (!token) {
+    if (!authData?.token) {
       navigate("/");
     }
   }, []);

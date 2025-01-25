@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/authProvider";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -28,6 +29,7 @@ export type User = {
 };
 
 export function ContractView() {
+  const { authData } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [contracts, setContracts] = useState<Contract[] | []>([]);
@@ -39,15 +41,20 @@ export function ContractView() {
 
   const refresh = () => {
     setLoading(true);
-    // TODO: insert id of authenticated user once its done
-    fetch(`http://localhost:3000/customers/${3}/contracts`)
-      .then((result) => result.json())
-      .then((data) => {
-        if (data.success) {
-          setContracts(data.result);
-        }
+    if (authData) {
+      fetch(`http://localhost:3000/customers/${authData.user.id}/contracts`, {
+        headers: {
+          Authorization: `Bearer ${authData.token}`,
+        },
       })
-      .finally(() => setLoading(false));
+        .then((result) => result.json())
+        .then((data) => {
+          if (data.success) {
+            setContracts(data.result);
+          }
+        })
+        .finally(() => setLoading(false));
+    }
   };
   useEffect(() => refresh(), []);
   useEffect(() => populateTableRows(), [contracts]);

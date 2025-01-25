@@ -7,14 +7,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { ContractAudit } from "./pages/ContractAudit";
 import { AuthProvider } from "./components/authProvider";
 import { ProtectedRoute } from "./components/protectedRoute";
+import { Home } from "./pages/Home";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route index element={<ContractView />} />
+          <Route index element={<Home />} />
           <Route element={<ProtectedRoute />}>
+            <Route path="/contracts" element={<ContractView />} />
             <Route path="/contract-audit" element={<ContractAudit />} />
           </Route>
         </Routes>

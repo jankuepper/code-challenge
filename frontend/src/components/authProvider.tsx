@@ -2,14 +2,19 @@ import {
   createContext,
   ReactElement,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
 
-const AuthContext = createContext({
-  token: undefined,
-});
+export type AuthData = {
+  token: string;
+  user: { id: number; username: string; email: string; type: string };
+};
+
+const AuthContext = createContext<{
+  authData?: AuthData;
+  setAuthData?: any;
+}>({});
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({
@@ -17,13 +22,13 @@ export function AuthProvider({
 }: {
   children: ReactElement[] | ReactElement;
 }) {
-  const [token, setToken] = useState(undefined);
+  const [authData, setAuthData] = useState<AuthData | undefined>(undefined);
   const contextValue = useMemo(
     () => ({
-      token,
-      setToken,
+      authData,
+      setAuthData: (data: AuthData) => setAuthData(data),
     }),
-    [token]
+    [authData]
   );
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

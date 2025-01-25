@@ -14,11 +14,10 @@ export function authMiddleware(
     return next("router");
   }
   try {
-    // TODO: might need to extract token from headerPayload by replace("Bearer ", "")
-    req.username = validateToken(headerPayload);
+    req.username = validateToken(headerPayload.replace("Bearer ", ""));
     next();
   } catch (err) {
-    res.status(400).json({ success: false, errors: ["Invalid token"] });
+    res.status(400).json({ success: false, errors: ["Invalid token."] });
     next("router");
   }
 }

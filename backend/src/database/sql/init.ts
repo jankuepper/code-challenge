@@ -1,12 +1,12 @@
 import { db } from "..";
 
 export function createUserTable() {
-  // TODO: add back UNIQUE constraint to email
+  // TODO: add back UNIQUE constraint to email and username
   const createUserTable = `
     CREATE TABLE IF NOT EXISTS user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        email TEXT NOT NULL,
+        username TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         type TEXT NOT NULL,
         salt TEXT NO NULL
