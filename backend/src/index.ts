@@ -12,6 +12,10 @@ import { isANumber } from "./utils/isNumber";
 import { isValidContractBody } from "./utils/validation";
 import { json } from "body-parser";
 import cors from "cors";
+import {
+  getAllContractAudits,
+  getContractAuditsById,
+} from "./database/sql/contract_audit";
 
 var corsOptions = {
   origin: "http://localhost:5173/",
@@ -83,6 +87,19 @@ app.get("/contracts/:id", ({ params: { id } }, res: Response) => {
   let result = {};
   if (isANumber(id)) {
     result = getContractById({ $id: Number(id) });
+  }
+  res.json(result);
+});
+
+app.get("/contract_audits", (_req: Request, res: Response) => {
+  const result = getAllContractAudits();
+  res.json(result);
+});
+
+app.get("/contract_audits/:id", ({ params: { id } }, res: Response) => {
+  let result = {};
+  if (isANumber(id)) {
+    result = getContractAuditsById({ $id: Number(id) });
   }
   res.json(result);
 });
