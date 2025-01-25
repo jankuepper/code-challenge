@@ -12,6 +12,7 @@ import {
 } from "./routes/customer";
 import { getContractRoute, getContractsRoute } from "./routes/contract";
 import {
+  getContractAuditDiffRoute,
   getContractAuditRoute,
   getContractAuditsRoute,
 } from "./routes/contract_audit";
@@ -42,6 +43,7 @@ app.get("/contracts/:id", authMiddleware, getContractRoute);
 
 app.get("/contract_audits", authMiddleware, getContractAuditsRoute);
 app.get("/contract_audits/:id", authMiddleware, getContractAuditRoute);
+app.get("/contract_audits/:id/diff", authMiddleware, getContractAuditDiffRoute);
 
 app.post("/login", loginRoute);
 
