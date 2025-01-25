@@ -25,7 +25,7 @@ app.use(cors());
 
 initializeDb();
 
-app.get("/customers", authMiddleware, (_req: Request, res: Response) => {
+app.get("/customers", (_req: Request, res: Response) => {
   const result = getAllCustomers();
   res.json(result);
 });
@@ -38,16 +38,21 @@ app.get("/customers/:id", ({ params: { id } }, res: Response) => {
   res.json(result);
 });
 
-app.get("/customers/:id/contracts", ({ params: { id } }, res: Response) => {
-  let result = {};
-  if (isANumber(id)) {
-    result = getAllContractsFromCustomer({ $id: Number(id) });
+app.get(
+  "/customers/:id/contracts",
+  authMiddleware,
+  ({ params: { id } }, res: Response) => {
+    let result = {};
+    if (isANumber(id)) {
+      result = getAllContractsFromCustomer({ $id: Number(id) });
+    }
+    res.json(result);
   }
-  res.json(result);
-});
+);
 
 app.get(
   "/customers/:id/contracts/:contract_id",
+  authMiddleware,
   ({ params: { id, contract_id } }, res: Response) => {
     let result = {};
     if (isANumber(id) && isANumber(contract_id)) {
@@ -62,6 +67,7 @@ app.get(
 
 app.put(
   "/customers/:id/contracts/:contract_id",
+  authMiddleware,
   ({ params: { id, contract_id }, body }, res) => {
     let result = {};
     if (isANumber(id) && isANumber(contract_id) && isValidContractBody(body)) {
