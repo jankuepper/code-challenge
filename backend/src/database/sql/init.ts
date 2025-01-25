@@ -8,7 +8,8 @@ export function createUserTable() {
         username TEXT NOT NULL,
         email TEXT NOT NULL,
         password TEXT NOT NULL,
-        type TEXT NOT NULL
+        type TEXT NOT NULL,
+        salt TEXT NO NULL
     )`;
   try {
     const result = db.exec(createUserTable);
