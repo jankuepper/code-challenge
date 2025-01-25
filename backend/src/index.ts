@@ -24,6 +24,10 @@ app.use(cors());
 
 initializeDb();
 
+// public
+app.post("/login", loginRoute);
+
+// restricted
 app.get("/customers", authMiddleware, getCustomersRoute);
 app.get("/customers/:id", authMiddleware, getCustomerRoute);
 app.get("/customers/:id/contracts", authMiddleware, getCustomerContractsRoute);
@@ -44,7 +48,5 @@ app.get("/contracts/:id", authMiddleware, getContractRoute);
 app.get("/contract_audits", authMiddleware, getContractAuditsRoute);
 app.get("/contract_audits/:id", authMiddleware, getContractAuditRoute);
 app.get("/contract_audits/:id/diff", authMiddleware, getContractAuditDiffRoute);
-
-app.post("/login", loginRoute);
 
 app.listen(3000, () => console.log("Started listening on port 3000"));

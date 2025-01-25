@@ -3,7 +3,6 @@ import { db } from "..";
 export function getAllContractAudits() {
   const queryAllContractAuditsSQL = `SELECT * FROM contract_audit`;
   try {
-    // TODO: type
     const result = db.prepare(queryAllContractAuditsSQL).all();
     return { success: !!result, errors: undefined, result };
   } catch (e) {
@@ -19,7 +18,6 @@ export function getContractAuditsById(args: { $id: number }) {
                                ORDER BY audit_date DESC 
                                LIMIT 1`;
   try {
-    // TODO: type
     const result = db.prepare(queryContractAuditById).get(args as any);
     return { success: !!result, errors: undefined, result };
   } catch (e) {
