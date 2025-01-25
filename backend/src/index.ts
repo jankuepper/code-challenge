@@ -17,11 +17,7 @@ import {
   getContractAuditsById,
 } from "./database/sql/contract_audit";
 import { handleLogin } from "./service/login";
-
-var corsOptions = {
-  origin: "http://localhost:5173/",
-  optionsSuccessStatus: 200,
-};
+import { authMiddleware } from "./middleware/auth";
 
 const app = express();
 app.use(json());
@@ -29,7 +25,7 @@ app.use(cors());
 
 initializeDb();
 
-app.get("/customers", (_req: Request, res: Response) => {
+app.get("/customers", authMiddleware, (_req: Request, res: Response) => {
   const result = getAllCustomers();
   res.json(result);
 });
