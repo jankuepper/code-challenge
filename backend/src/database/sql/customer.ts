@@ -1,5 +1,4 @@
 import { db } from "..";
-import { Contract } from "./contract";
 
 export type User = {
   id: number;
@@ -19,7 +18,7 @@ export function createUser(args: {
 
   try {
     const result = db.prepare(createUserSQL).run(args as any);
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };
@@ -30,7 +29,7 @@ export function getAllCustomers() {
   const queryAllCustomerSQL = `SELECT * FROM user WHERE type = 'customer'`;
   try {
     const result = db.prepare(queryAllCustomerSQL).all() as User[] | [];
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };
@@ -41,7 +40,7 @@ export function getCustomerById(args: { $id: number }) {
   const customerByIdSQL = `SELECT * FROM user WHERE id = $id AND type = 'customer'`;
   try {
     const result = db.prepare(customerByIdSQL).get(args as any) as User | {};
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };

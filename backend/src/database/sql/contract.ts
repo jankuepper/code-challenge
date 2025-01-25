@@ -17,7 +17,7 @@ export function createContract(args: {
   const createContractSQL = `INSERT INTO contract (name, status, user_id) VALUES ($name, $status, $user_id)`;
   try {
     const result = db.prepare(createContractSQL).run(args as any);
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };
@@ -28,7 +28,7 @@ export function getAllContracts() {
   const queryAllContractSQL = `SELECT * FROM contract`;
   try {
     const result = db.prepare(queryAllContractSQL).all() as Contract[] | [];
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };
@@ -41,7 +41,7 @@ export function getContractById(args: { $id: number }) {
     const result = db.prepare(queryContractById).get(args as any) as
       | Contract
       | {};
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };
@@ -58,7 +58,7 @@ export function getAllContractsFromCustomer(args: { $id: number }) {
     const result = db
       .prepare(queryAllContractsFromCustomerById)
       .all(args as any) as Contract | [];
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };
@@ -78,7 +78,7 @@ export function getContractFromCustomer(args: {
     const result = db
       .prepare(queryContractByIdFromCustomerById)
       .get(args as any) as Contract | {};
-    return { success: true, errors: undefined, result };
+    return { success: !!result, errors: undefined, result };
   } catch (e) {
     console.error(e);
     return { success: false, errors: [e], result: undefined };
