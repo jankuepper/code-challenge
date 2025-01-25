@@ -15,7 +15,9 @@ export function getAllContractAudits() {
 export function getContractAuditsById(args: { $id: number }) {
   const queryContractAuditById = `SELECT * 
                                FROM contract_audit
-                               WHERE contract_id = $id`;
+                               WHERE contract_id = $id
+                               ORDER BY audit_date DESC 
+                               LIMIT 1`;
   try {
     // TODO: type
     const result = db.prepare(queryContractAuditById).get(args as any);
