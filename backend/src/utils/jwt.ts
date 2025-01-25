@@ -1,4 +1,4 @@
-import { sign, verify } from "jsonwebtoken";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { isAString } from "./isString";
 
 // this is essentially treated as an all access token
@@ -15,7 +15,7 @@ export function validateToken(token: string) {
 
 export function refreshToken(token: string) {
   const payload = verify(token, `${process.env.JWT_SECRET}`);
-  if (isAString(payload) || !("username" in payload)) {
+  if (typeof payload === "string" || !("username" in payload)) {
     throw Error("Token is invalid.");
   }
   return generateToken(payload.username);
